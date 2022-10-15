@@ -1,28 +1,78 @@
+from datetime import datetime
 from email.policy import default
+from enum import unique
+from locale import currency
+import ssl
+from sys import prefix
+from tabnanny import verbose
 from django.db import models
 
 
-class Itinerary(models.Model):
-    id = models.CharField(primary_key=True, max_length=20, default='it_000')
-    legs = models.ManyToManyField('Leg', related_name='leg')
-    price = models.CharField(max_length=10)
-    agent = models.CharField(max_length=100)
-    agent_rating = models.FloatField(default=0.0)
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+    # @property  # type: ignore
+    # def prefixed_id(self, prefix):
+    #     return f'{prefix}_{id}'
+
+
+class Airline(BaseModel):
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=2)
+    # agent = models.OneToOneField('Agent', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.id
+        return f'{self.name} - {self.code}'
 
 
-class Leg(models.Model):
-    id = models.CharField(primary_key=True, max_length=20, default='leg_000')
-    departure_airport = models.CharField(max_length=3)
-    arrival_airport = models.CharField(max_length=3)
+class Airport(BaseModel):
+    name = models.CharField(max_length=100)
+    # city = models.CharField(max_length=100)
+    # country = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Agent(BaseModel):
+    name = models.CharField(max_length=100)
+    rating = models.FloatField(null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Pricing(BaseModel):
+    currency = models.CharField(max_length=1, default='£')
+    price = models.FloatField(default=0.0)
+
+    def __str__(self):
+        return f'{self.currency} {self.price}'
+
+
+class Leg(BaseModel):
+    departure_airport = models.ForeignKey(
+        Airport,  on_delete=models.CASCADE, related_name='departure_airport')
+    arrival_airport = models.ForeignKey(
+        Airport, on_delete=models.CASCADE, related_name='arrival_airport')
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
     stops = models.IntegerField()
-    airline_name = models.CharField(max_length=100)
-    airline_id = models.CharField(max_length=2)
+    airline = models.ForeignKey(Airline, on_delete=models.CASCADE)
     duration_mins = models.IntegerField()
 
     def __str__(self):
-        return self.departure_airport + " to " + self.arrival_airport
+        return f'{self.departure_airport} - {self.arrival_airport}'
+
+
+class Itinerary(BaseModel):
+    legs = models.ManyToManyField(Leg)
+    pricing = models.OneToOneField(Pricing, on_delete=models.CASCADE)
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.agent} - {self.pricing}'

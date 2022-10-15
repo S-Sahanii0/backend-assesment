@@ -1,6 +1,5 @@
-from typing import Sequence
 from django.contrib import admin
-from .models import Itinerary, Leg
+from .models import Airline, Airport, Itinerary, Leg, Agent, Pricing
 
 
 class LegsInline(admin.TabularInline):
@@ -19,3 +18,7 @@ class ItineraryAdmin(admin.ModelAdmin):
 
 admin.site.register(Itinerary, ItineraryAdmin)
 admin.site.register(Leg, LegInline)
+admin.site.register(Agent)
+admin.site.register(Airline)
+admin.site.register(Airport)
+admin.site.register(Pricing)
