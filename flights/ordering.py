@@ -1,7 +1,7 @@
 from rest_framework.filters import OrderingFilter
 
 
-class PriceOrdering(OrderingFilter):
+class PriceOrderingFilter(OrderingFilter):
     """Custom ordering filter for price field of the itinerary.
     It allows to order by [highest_price] or [lowest_price].
     """
