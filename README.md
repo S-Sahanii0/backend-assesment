@@ -1,16 +1,21 @@
 # Flights back-end recruitment test
 
 ## Getting Started
-
+- Documentation
 
 ## Architecture 
-
+- Diagrams
+- src/
 
 ## Workflow
-
+- Tasks
 
 ## Improvements
-
+- ID ambiguity
+- secrets
+/ index.
+logger
+prod vs dev
 
 ## Assumptions
 1. The given url is the source of data and the schema that it's sending will be maintained.
