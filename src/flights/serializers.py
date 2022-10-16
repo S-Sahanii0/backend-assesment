@@ -22,28 +22,28 @@ class BaseSerializer(serializers.ModelSerializer):
 
 
 class AirlinesSerializer(BaseSerializer):
-    id_prefix = 'al'
+    id_prefix: str = 'al'
 
     class Meta(BaseSerializer.Meta):
         model = Airline
 
 
 class AirportsSerializer(BaseSerializer):
-    id_prefix = 'ap'
+    id_prefix: str = 'ap'
 
     class Meta(BaseSerializer.Meta):
         model = Airport
 
 
 class AgentSerializer(BaseSerializer):
-    id_prefix = 'ag'
+    id_prefix: str = 'ag'
 
     class Meta(BaseSerializer.Meta):
         model = Agent
 
 
 class LegSerializer(BaseSerializer):
-    id_prefix = 'leg'
+    id_prefix: str = 'leg'
 
     departure_airport = AirportsSerializer()
     arrival_airport = AirportsSerializer()
@@ -54,6 +54,7 @@ class LegSerializer(BaseSerializer):
 
 
 class ItinerarySerializer(BaseSerializer):
+    id_prefix: str = 'it'
     legs = LegSerializer(many=True)
     agent = AgentSerializer()
     pricing = serializers.SerializerMethodField('get_pricing')

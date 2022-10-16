@@ -1,11 +1,14 @@
 # Flights back-end recruitment test
 
+[Task](docs/task.md)
+
 ## Getting Started
 - Documentation
 
 ## Architecture 
 - Diagrams
-- src/
+    `pip install graphviz pyparsing`
+    `python manage.py graph_models -a -o ../images/models.png`
 
 ## Workflow
 - Tasks

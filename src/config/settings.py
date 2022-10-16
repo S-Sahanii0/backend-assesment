@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'flights',
 
     'rest_framework',
-    'django_filters',
+    'django_filters', # search & filter
     'drf_yasg',  # swagger generator
+    'django_extensions', # runserver_plus, shell_plus, werkzeug
 ]
 
 MIDDLEWARE = [
