@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'flights',
+
+    'rest_framework',
     'django_filters',
-
-
     'drf_yasg',  # swagger generator
 ]
 
@@ -72,6 +72,10 @@ TEMPLATES = [
         },
     },
 ]
+
+# SWAGGER_SETTINGS = {
+#     "DEFAULT_MODEL_RENDERING": "example"
+# }
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
