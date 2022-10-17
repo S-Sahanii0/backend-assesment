@@ -11,6 +11,8 @@ from drf_yasg.utils import swagger_auto_schema
 
 @method_decorator(cache_page(CACHE_TTL), name='dispatch')
 class ItineraryListView(generics.ListAPIView):
+    """List all itineraries."""
+    
     queryset = Itinerary.objects.all()
     serializer_class = ItinerarySerializer
     filter_backends = [PriceOrderingFilter, FlightsFilter]

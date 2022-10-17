@@ -1,9 +1,12 @@
 from typing import Collection
+
+from celery import shared_task
 from flights.utils import split_currency_and_amount, make_request
 from flights.models import Agent, Airline, Airport, Itinerary, Leg, Pricing
 
 
-def import_data():
+@shared_task()
+def import_external_data():
     """Fetches legs and itineraries from the source url 
     and has a side-effect of storing them into the database."""
 

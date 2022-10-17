@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab   
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,7 +47,8 @@ INSTALLED_APPS = [
     'django_filters', # search & filter
     'drf_yasg',  # swagger generator
     'django_extensions', # runserver_plus, shell_plus, werkzeug
-    'django_object_actions',
+    'django_object_actions', # customize actions in admin panel
+    'django_celery_beat', # tasks from the admin panel
 
     # ------------ [dev] deps ------------ #
     'coverage',
@@ -108,7 +110,7 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache', #todo: add fallback dummy cache
         'LOCATION': 'redis://127.0.0.1:6379',
     }
 }
@@ -132,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 INTERNAL_IPS = [
-    "127.0.0.1",
+    '127.0.0.1',
 ]
 
 
@@ -159,7 +161,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # It's important to do so that Redis does not interfere
 # with the Django Admin Panel and the current session.
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
 
 CACHE_TTL = 60 * 1
+
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+# CELERY_TIMEZONE = 'UTC'   
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    # Executes every day at 5am
+    'daily-import-external-data': { 
+         'task': 'flights.tasks.import_external_data', 
+         'schedule': crontab(minute='0', hour='5'),
+        },          
+}

@@ -1,6 +1,7 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import Airline, Airport, Itinerary, Leg, Agent, Pricing
 from django_object_actions import DjangoObjectActions
+from .tasks import import_external_data
 
 
 class AgentAdmin(admin.ModelAdmin):
@@ -14,12 +15,9 @@ class AirlineAdmin(admin.ModelAdmin):
 class AirportAdmin(admin.ModelAdmin):
     search_fields: list[str] = ['name']
     
-
-    
 class LegsInline(admin.TabularInline):
     verbose_name = 'Leg'
     model = Itinerary.legs.through
-
 
 class LegInline(admin.ModelAdmin):
     inlines = [LegsInline]
@@ -35,15 +33,12 @@ class ItineraryAdmin(DjangoObjectActions, admin.ModelAdmin):
     ordering: list[str] = ['pricing__price']
     changelist_actions = ['import_data']
     
-    def import_data(self, request, obj):
-        print('import_data')
+    def import_data(self, request, __):
+        import_external_data.delay()  # type: ignore
+        return messages.info(request, 'Data import from external source has started, please reload.')
+        
         
     
-        
-    
-    
-
-
 admin.site.register(Itinerary, ItineraryAdmin)
 admin.site.register(Leg, LegInline)
 admin.site.register(Agent, AgentAdmin)
