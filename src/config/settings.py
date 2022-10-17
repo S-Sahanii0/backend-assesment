@@ -38,12 +38,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # ------------ apps ------------ #
     'flights',
 
+    # ------------ [prod] deps ------------ #
     'rest_framework',
     'django_filters', # search & filter
     'drf_yasg',  # swagger generator
     'django_extensions', # runserver_plus, shell_plus, werkzeug
+    'django_object_actions',
+
+    # ------------ [dev] deps ------------ #
+    'coverage',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -91,6 +99,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'TEST': {
+            'NAME': 'memory',
+        },
     }
 }
 
@@ -118,6 +129,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 

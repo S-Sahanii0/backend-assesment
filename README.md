@@ -3,12 +3,20 @@
 [Task](docs/task.md)
 
 ## Getting Started
-- Documentation
+- Requirements
+
+- Tests
+
+- Coverage 
+    `coverage run manage.py test`
+    `coverage html`
+    `open htmlcov/index.html`
+
 
 ## Architecture 
 - Diagrams
     `pip install graphviz pyparsing`
-    `python manage.py graph_models -a -o ../images/models.png`
+    `python manage.py graph_models -a -o ../images/entity_diagram.png`
 
 ## Workflow
 - Tasks
@@ -16,9 +24,10 @@
 ## Improvements
 - ID ambiguity
 - secrets
-/ index.
-logger
-prod vs dev
+- add ci
+- indexes
+- logger
+- prod vs dev
 
 ## Assumptions
 1. The given url is the source of data and the schema that it's sending will be maintained.

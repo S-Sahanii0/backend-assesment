@@ -1,5 +1,4 @@
 from datetime import datetime
-from email.policy import default
 from enum import unique
 from locale import currency
 import ssl
@@ -16,10 +15,6 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-
-    # @property  # type: ignore
-    # def prefixed_id(self, prefix):
-    #     return f'{prefix}_{id}'
 
 
 class Airline(BaseModel):

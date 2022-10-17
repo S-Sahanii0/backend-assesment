@@ -2,7 +2,7 @@ from rest_framework import generics
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from config.settings import CACHE_TTL
-from flights.ordering import PriceOrderingFilter
+from flights.filters import PriceOrderingFilter, FlightsFilter
 from flights.serializers import ItinerarySerializer
 from .models import Itinerary
 from rest_framework import filters
@@ -13,16 +13,17 @@ from drf_yasg.utils import swagger_auto_schema
 class ItineraryListView(generics.ListAPIView):
     queryset = Itinerary.objects.all()
     serializer_class = ItinerarySerializer
-    filter_backends = [filters.SearchFilter, PriceOrderingFilter]
-    search_fields = ['agent__name']
+    filter_backends = [PriceOrderingFilter, FlightsFilter]
 
     @swagger_auto_schema(
         operation_description="""Get All Itineraries.
         
-        Search fields = Agent Name
-        Ordering fields = [highest_price, lowest_price]
+        Search fields: [stops, airline, agent]
+        Ordering fields: [Price(highest_price, lowest_price) OR Rating(highest_rating, lowest_rating)]
         """,
         responses={200: ItinerarySerializer(many=True)},
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+    
+    
