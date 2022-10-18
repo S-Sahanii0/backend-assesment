@@ -8,6 +8,8 @@ from .models import Itinerary, Leg
 from rest_framework import filters
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models.query import Prefetch
+from drf_yasg import openapi
+
 
 
 
@@ -18,7 +20,8 @@ class ItineraryListView(generics.ListAPIView):
     queryset = Itinerary.objects.prefetch_related(
         Prefetch(
             'legs',
-            queryset = Leg.objects.select_related('departure_airport', 'arrival_airport', 'airline').all()
+            queryset = Leg.objects.
+            select_related('departure_airport', 'arrival_airport', 'airline').all()
         )
         ).select_related('agent').all()
     serializer_class = ItinerarySerializer
@@ -32,6 +35,14 @@ class ItineraryListView(generics.ListAPIView):
         Ordering fields: [Price(highest_price, lowest_price) OR Rating(highest_rating, lowest_rating)]
         """,
         responses={200: ItinerarySerializer(many=True)},
+        manual_parameters=[
+            openapi.Parameter('stops', openapi.IN_QUERY, 
+                              description="Filter by number of stops.", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('agent', openapi.IN_QUERY, 
+                              description="Filter by agent name.", type=openapi.TYPE_STRING),
+            openapi.Parameter('airline', openapi.IN_QUERY, 
+                              description="Filter by airlines.", type=openapi.TYPE_STRING),
+        ]
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
