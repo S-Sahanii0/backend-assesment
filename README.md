@@ -18,7 +18,7 @@ Link to the [API Documentation](http://127.0.0.1:8000/redoc/). [Note: Not hosted
 
 ![alt 'text'](images/high_level_architecture.png)
 
-The different components for this system and how they interact with each other is shown in the ~ C2 level. See more: [C4 diagrams](https://c4model.com/).
+The different components for this system and how they interact with each other is shown in the form of a ~ C2 level diagram. See more: [C4 diagrams](https://c4model.com/).
 
 #### App Models [Generated]
 
