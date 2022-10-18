@@ -46,13 +46,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters', # search & filter
     'drf_yasg',  # swagger generator
-    'django_extensions', # runserver_plus, shell_plus, werkzeug
     'django_object_actions', # customize actions in admin panel
     'django_celery_beat', # tasks from the admin panel
 
     # ------------ [dev] deps ------------ #
     'coverage',
     'debug_toolbar',
+    'django_extensions', # runserver_plus, shell_plus, werkzeug
 ]
 
 MIDDLEWARE = [

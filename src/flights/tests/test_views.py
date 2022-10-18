@@ -50,5 +50,3 @@ class ItineraryViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(data)[0]['pricing'] > json.loads(data)[1]['pricing'] , True)
         
-        
-      
