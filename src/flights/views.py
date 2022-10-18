@@ -4,16 +4,23 @@ from django.views.decorators.cache import cache_page
 from config.settings import CACHE_TTL
 from flights.filters import PriceOrderingFilter, FlightsFilter
 from flights.serializers import ItinerarySerializer
-from .models import Itinerary
+from .models import Itinerary, Leg
 from rest_framework import filters
 from drf_yasg.utils import swagger_auto_schema
+from django.db.models.query import Prefetch
+
 
 
 @method_decorator(cache_page(CACHE_TTL), name='dispatch')
 class ItineraryListView(generics.ListAPIView):
     """List all itineraries."""
     
-    queryset = Itinerary.objects.all()
+    queryset = Itinerary.objects.prefetch_related(
+        Prefetch(
+            'legs',
+            queryset = Leg.objects.select_related('departure_airport', 'arrival_airport', 'airline').all()
+        )
+        ).select_related('agent').all()
     serializer_class = ItinerarySerializer
     pagination_class = pagination.LimitOffsetPagination
     filter_backends = [PriceOrderingFilter, FlightsFilter]

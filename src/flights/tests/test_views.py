@@ -9,15 +9,17 @@ from model_bakery import baker
 from rest_framework.response import Response
 
 from flights.models import Itinerary
+from flights.serializers import ItinerarySerializer
 
 
 
-class ItineraryViewTest(APITestCase):
+class ItineraryListViewTest(APITestCase):
     
     def test_list_itineraries(self):
         """
         Ensure list of itineraries is correctly returned.
         """
+        
         response = self.client.get('/flights/itineraries/', format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
@@ -28,9 +30,10 @@ class ItineraryViewTest(APITestCase):
         """
         
         itinerary = baker.make(Itinerary, agent__name="Test") 
+        itinerary2 = baker.make(Itinerary, agent__name="Test1")
         response = self.client.get('/flights/itineraries/',{'agent': 'Test'}, format='json')
         
-        data = response.json()
+        data = response.json()['results']
     
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data[0]['id'], f'it_{itinerary.pk}')
@@ -46,7 +49,8 @@ class ItineraryViewTest(APITestCase):
         
         response = self.client.get('/flights/itineraries/?search=Test',{'ordering': 'highest_price'}, format='json')
         
-        data = response.content.decode('utf-8')
+        data = response.json()['results']
+        print(data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(data)[0]['pricing'] > json.loads(data)[1]['pricing'] , True)
+        self.assertEqual((data)[0]['pricing'] > (data)[1]['pricing'] , True)
         
