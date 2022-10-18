@@ -10,9 +10,9 @@ class FlightsFilter(BaseFilterBackend):
         if request.query_params.get('stops'):
             queryset = queryset.filter(legs__stops=request.query_params.get('stops'))
         if request.query_params.get('airline'):
-            queryset = queryset.filter(legs__airline__name=request.query_params.get('airline'))
+            queryset = queryset.filter(legs__airline__name__icontains=request.query_params.get('airline'))
         if request.query_params.get('agent'):
-            queryset = queryset.filter(agent__name=request.query_params.get('agent'))
+            queryset = queryset.filter(agent__name__icontains=request.query_params.get('agent'))
         return queryset
     
 class PriceOrderingFilter(OrderingFilter):

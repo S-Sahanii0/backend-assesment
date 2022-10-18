@@ -21,8 +21,9 @@ class LegsInline(admin.TabularInline):
 
 class LegInline(admin.ModelAdmin):
     inlines = [LegsInline]
-    list_display: list[str] = ['departure_airport', 'arrival_airport', 'airline', 'departure_time', 'arrival_time']
+    list_display: list[str] = ['departure_airport', 'arrival_airport', 'stops','airline', 'departure_time', 'arrival_time']
     search_fields: list[str] = ['airline__name', 'airline__code', 'departure_airport__name', 'arrival_airport__name']
+    list_filter: list[str] = ['airline__name', 'airline__code', 'departure_airport', 'arrival_airport', 'stops']
 
 
 class ItineraryAdmin(DjangoObjectActions, admin.ModelAdmin):
@@ -30,6 +31,8 @@ class ItineraryAdmin(DjangoObjectActions, admin.ModelAdmin):
     list_display: list[str] = ['agent', 'pricing']
     exclude = ['legs']
     search_fields: list[str] = ['id', 'agent__name']
+    list_filter: list[str] = ['agent__name', 'legs__stops', 
+                              'legs__airline', 'legs__departure_airport', 'legs__arrival_airport']
     ordering: list[str] = ['pricing__price']
     changelist_actions = ['import_data']
     

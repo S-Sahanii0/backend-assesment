@@ -20,6 +20,30 @@ Link to the [API Documentation](http://127.0.0.1:8000/redoc/). [Note: Not hosted
 
 The different components for this system and how they interact with each other is shown in the form of a ~ C2 level diagram. See more: [C4 diagrams](https://c4model.com/).
 
+**Boundaries**: The flights url provided in the [assessment](docs/task.md) can be considered as an external boundary of the system. The internal boundaries are the database and the cache, `SQLite` and `Redis` for now.
+
+**Application**: The Django application is the core component of our system. It provides the API to interact with the data and also provides the admin panel to manage the data. On top of this, it is responsible for delegating the default and custom tasks (created from the admin panel) to `celery`.
+
+*The only application logic in the system is the `celery` task which runs every day at 5am to fetch data from the external source.*
+
+**Worker**: Using the `redis` server as Message Broker, `celery workers` are responsible for searching and executing the tasks in our application. 
+
+The tasks can be customized from main app's [settings.py](src/config/settings.py) and all scheduled tasks are defined under the  `CELERY_BEAT_SCHEDULE` variable as shown below.
+
+
+```sh
+CELERY_BEAT_SCHEDULE = {
+    # This is the only default scheduled task responsible for 
+    # fetching the data from the external source and storing it in the database. 
+    'daily-import-external-data': { 
+         'task': 'flights.tasks.import_external_data', 
+         'schedule': crontab(minute='0', hour='5'),
+        },          
+}
+```
+
+
+
 #### App Models [Generated]
 
 ![alt text](images/entity_diagram.png)
@@ -35,6 +59,9 @@ The different components for this system and how they interact with each other i
 4. Add secrets to environment variables.
 5. Deploy in development/staging server. (Find an alternative to the heroku free tier 😜)
 6. Add/explain folder structure in README.
+
+### Resources
+- https://medium.com/@ksarthak4ever/django-handling-periodic-tasks-with-celery-daaa2a146f14
 
 ---
 ## Getting Started 🚀
