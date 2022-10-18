@@ -21,14 +21,14 @@ class ItineraryViewTest(APITestCase):
         response = self.client.get('/flights/itineraries/', format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-    def test_list_itineraries_with_search(self):
+    def test_list_itineraries_with_filtering(self):
         """
-        Given a search parameter q, returns a list of data containing that parameter.
+        Given a parameter q, returns a list of data containing that parameter.
         If not returns an empty list.
         """
         
         itinerary = baker.make(Itinerary, agent__name="Test") 
-        response = self.client.get('/flights/itineraries/?search=Test',{'search': 'Test'}, format='json')
+        response = self.client.get('/flights/itineraries/',{'agent': 'Test'}, format='json')
         
         data = response.json()
     

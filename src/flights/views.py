@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, pagination
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from config.settings import CACHE_TTL
@@ -15,6 +15,7 @@ class ItineraryListView(generics.ListAPIView):
     
     queryset = Itinerary.objects.all()
     serializer_class = ItinerarySerializer
+    pagination_class = pagination.LimitOffsetPagination
     filter_backends = [PriceOrderingFilter, FlightsFilter]
 
     @swagger_auto_schema(
